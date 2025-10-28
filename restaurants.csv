@@ -1,0 +1,21 @@
+id,name,category,address,phone_number,rating
+1,Sabor da Colina,Culinaria Brasileira,"Rua das Acácias, 123 - Centro",(11) 98765-4321,4.7
+2,Cantina da Nonna,Italiana,"Avenida Principal, 45 - Vila Romana",(11) 99876-5432,4.2
+3,O Fogo Sagrado,Churrascaria,"Rodovia do Sol, KM 5 - Bairro Nobre",(11) 97654-3210,4.9
+4,Sushi Master,Japonesa,"Alameda dos Pássaros, 1010 - Oriental Park",(11) 96543-2109,4.5
+5,Burger House 77,Lanches,"Rua da Harmonia, 567 - Cidade Alta",(11) 95432-1098,4.6
+6,Verde Vida,Vegetariano,"Praça das Folhas, 22 - Jardim Zen",(11) 94321-0987,4.8
+7,Taco Loco,Mexicana,"Calle do Sombrero, Lote 3 - Bairro Quente",(11) 93210-9876,4.3
+8,Grelha Fantastica,Culinaria Brasileira,"Av. Central, 888 - Polo Comercial",(11) 92109-8765,4.4
+9,Pizzaria Luna,Pizzaria,"Travessa da Pizza, 99 - Vila Nova",(11) 91098-7654,4
+10,Cafe dos Sonhos,Cafeteria,"Calçadão da Arte, 12 - Centro Antigo",(11) 99087-6543,3.9
+11,Mare Sabor,Frutos do Mar,"Cais da Sereia, Box 5 - Porto Novo",(11) 98976-5432,4.7
+12,O Misterio do Wok,Asiatica,"Beco da Fortuna, 99 - Chinatown",(11) 97865-4321,4.5
+13,Empario do Chef,Contemporanea,"Largo das Flores, 40 - Boemio",(11) 96754-3210,4.1
+14,Taberna Medieval,Tematico,"Castelo da Historia, Torre Sul",(11) 95643-2109,4.6
+15,Pao e Doce,Padaria,"Esquina Doce, 303 - Bairro Novo",(11) 94532-1098,4.2
+16,Boteco do Povo,Bar,"Vila das Cervejas, 1 - Centro Historico",(11) 93421-0987,4.4
+17,Massa Fresca,Italiana,"Rua dos Vinhos, 78 - Vila Nostalgia",(11) 92310-9876,4.3
+18,O Paraiso Vegano,Vegetariano,"Pico Verde, Chale 7 - Suica Paulista",(11) 91209-8765,4.8
+19,Mega Lanche,Lanches,"Rua Veloz, 15 - Planeta Gourmet",(11) 99708-7654,4.5
+20,Temperos do Brasil,Culinaria Brasileira,"Praca da Bandeira, 10 - Baixa Renda",(11) 98697-6543,3.8
