@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Required columns for POST requests
 REQUIRED_FIELDS = ['name', 'category', 'address', 'phone_number', 'rating']
+ALLOWED_FIELDS = REQUIRED_FIELDS
 
 
 @app.route("/")
@@ -32,13 +33,21 @@ def restaurants():
             return jsonify({
                 "error": "Missing required fields.",
                 "missing": missing_fields
-            }), 400
+            })
 
         # Block manual id
         if 'id' in restaurant_data:
             return jsonify({
                 "error": "Ids cant be manually set"
-            }), 400
+            })
+        
+        filtered_data = {}
+        # Exclude extra fields
+        for key in ALLOWED_FIELDS:
+            if key in restaurant_data:
+                filtered_data[key] = restaurant_data[key]
+
+        restaurant_data = filtered_data
         
         # Convert rating to float
         try:
