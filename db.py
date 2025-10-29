@@ -13,8 +13,8 @@ PWD = os.getenv("DB_PASSWORD")
 PORT_ID = os.getenv("DB_PORT")
 
 
-
 def get_db_connection():
+    # Tries to get connection to the database
     try:
         # Starts connection
         conn = psycopg2.connect(host = HOSTNAME,
@@ -25,17 +25,71 @@ def get_db_connection():
         return conn
     except psycopg2.Error as e:
         print(f"Failed to connect to the database. {e}")
+        return None 
 
 
+def add_restaurant(restaurant_data):
+
+    conn = None
+    new_id = None
+    
+    # Organize data to use in the SQL query
+    columns = ', '.join(restaurant_data.keys())
+    values = tuple(restaurant_data.values())
+
+    # Create placeholders for security
+    placeholders = ', '.join(['%s'] * len(restaurant_data))
+    # The RETURNING id to get the newly generated id
+    query = f"INSERT INTO restaurants ({columns}) VALUES ({placeholders}) RETURNING id;"
+    
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return None # Connection failure
+
+        cursor = conn.cursor()
+        
+        # INSERT query with parameters
+        cursor.execute(query, values)
+        
+        # Fetch id
+        new_id = cursor.fetchone()[0]
+        
+        conn.commit() 
+        cursor.close()
+        return new_id
+
+    except psycopg2.IntegrityError as e:
+        print(f"Integrity error. {e}")
+        if conn:
+            conn.rollback()
+        return None
+        
+    except Exception as e:
+        print(f"INSERT error using the query {query}. {e}")
+        print(f"Values = {values} and columns = {columns}")
+        if conn:
+            conn.rollback()
+        return None
+        
+    finally:
+        if conn:
+            conn.close()
+
+
+
+# Fetch all restaurants or restaurant by id
 def fetch_restaurants_data(restaurant_id=None):
     conn = None
+
     data = []
     try:
-        # Get the connection to the database
         conn = get_db_connection()
+        if conn is None:
+            return None # Connection failure
+            
         cursor = conn.cursor()
 
-        # Check if an ID was given as param
         if restaurant_id is None:
             query = "SELECT * FROM restaurants;"
             parameters = None
@@ -43,13 +97,11 @@ def fetch_restaurants_data(restaurant_id=None):
             query = "SELECT * FROM restaurants WHERE id = %s"
             parameters = (restaurant_id,)
         
-        # Execute the query
         cursor.execute(query, parameters)
 
-        # Get column names
+        # Get column names and fetch data
         column_names = [desc[0] for desc in cursor.description]
-        
-        # Fetch data
+        # Fetch data (a list of tuples)
         rows = cursor.fetchall()
 
         # Convert data into a list of dicts
@@ -61,7 +113,7 @@ def fetch_restaurants_data(restaurant_id=None):
         return data
 
     except Exception as e:
-        print(f"An error occurred. {e}")
+        print(f"An error occurred during fetch operation: {e}")
         return None
         
     finally:
