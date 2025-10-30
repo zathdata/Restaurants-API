@@ -91,7 +91,7 @@ def fetch_restaurants_data(restaurant_id=None):
         cursor = conn.cursor()
 
         if restaurant_id is None:
-            query = "SELECT * FROM restaurants;"
+            query = "SELECT * FROM restaurants ORDER BY id;"
             parameters = None
         else:
             query = "SELECT * FROM restaurants WHERE id = %s"
@@ -113,9 +113,52 @@ def fetch_restaurants_data(restaurant_id=None):
         return data
 
     except Exception as e:
-        print(f"An error occurred during fetch operation: {e}")
+        print(f"An error occurred during fetch operation. {e}")
         return None
         
+    finally:
+        if conn:
+            conn.close()
+
+
+def update_restaurant(restaurant_data, restaurant_id):
+    conn = None
+
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return None
+
+        cursor = conn.cursor()
+
+        values = [] # Used to get all values in order to pass as parameter
+        set_clauses = []
+
+        for key, value in restaurant_data.items():
+            set_clauses.append(f"{key} = %s")
+            values.append(value)
+
+        
+        final_set_clauses = ', '.join(set_clauses) # Transforms into str for the query
+        values.append(restaurant_id) # Append id to pass as param
+
+        query = f"UPDATE restaurants SET {final_set_clauses} WHERE id = %s;"
+        values = tuple(values)
+
+        cursor.execute(query, values)
+            
+        rows_updated = cursor.rowcount
+
+        conn.commit()
+
+        if rows_updated == 1:
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        print(f"An error has occured when trying to update the query. {e} ")
+
     finally:
         if conn:
             conn.close()

@@ -5,7 +5,8 @@ import db
 app = Flask(__name__)
 
 # Required columns for POST requests
-REQUIRED_FIELDS = ['name', 'category', 'address', 'phone_number', 'rating']
+# REQUIRED_FIELDS = ['name', 'category', 'address', 'phone_number', 'rating']
+REQUIRED_FIELDS = {'name', 'category', 'address', 'phone_number', 'rating'}
 ALLOWED_FIELDS = REQUIRED_FIELDS
 
 
@@ -82,16 +83,65 @@ def restaurants():
             return jsonify(data)
 
 
-@app.route("/api/restaurants/<id>")
+
+"""
+NEW CODE START HERE
+
+
+xxxxxxxxxxxxxxxxx
+"""
+
+
+@app.route("/api/restaurants/<id>", methods=['GET', 'PATCH'])
 def restaurants_by_id(id):
-    # Fetch restaurant by id
-    data = db.fetch_restaurants_data(id)
-    if data is None:
-        return jsonify({"error": "Could not retrieve the data."})
-    elif not data:
-        return jsonify({"error": "Restaurant could not be found"})
-    else:
-        return jsonify(data[0])
+
+    if request.method == 'PATCH':
+        try:
+            restaurant_data = request.get_json()
+        except Exception:
+            return jsonify({"error": "Invalid JSON format in request body"})
+
+        if not restaurant_data:
+            return jsonify({"error": "The data is empty"})
+        
+        if 'id' in restaurant_data:
+            return jsonify({
+                "error": "Ids cant be manually set"
+            })
+        
+        filtered_data = {}
+        # Get only fields that match the table
+        for key in ALLOWED_FIELDS:
+            if key in restaurant_data:
+                filtered_data[key] = restaurant_data[key]
+
+        if 'rating' in filtered_data:
+            try:
+                restaurant_data['rating'] = float(restaurant_data['rating'])
+            except (ValueError, TypeError):
+                return jsonify({"error": "Invalid number."})
+        
+
+        result = db.update_restaurant(restaurant_data, id)
+
+        if result is None:
+            return jsonify({"error": "An error has occurred when trying to update the data"})
+        
+        if result is False:
+            return jsonify({"message": "Restaurant not found."})
+        
+        return jsonify({"message": "Restaurant updated successfully." })
+
+    else: # GET method
+
+        # Fetch restaurant by id
+        data = db.fetch_restaurants_data(id)
+        if data is None:
+            return jsonify({"error": "Could not retrieve the data."})
+        elif not data:
+            return jsonify({"error": "Restaurant could not be found"})
+        else:
+            return jsonify(data[0])
 
 
 if __name__ == "__main__":
