@@ -84,15 +84,8 @@ def restaurants():
 
 
 
-"""
-NEW CODE START HERE
 
-
-xxxxxxxxxxxxxxxxx
-"""
-
-
-@app.route("/api/restaurants/<id>", methods=['GET', 'PATCH'])
+@app.route("/api/restaurants/<id>", methods=['GET', 'PATCH', 'DELETE'])
 def restaurants_by_id(id):
 
     if request.method == 'PATCH':
@@ -131,6 +124,16 @@ def restaurants_by_id(id):
             return jsonify({"message": "Restaurant not found."})
         
         return jsonify({"message": "Restaurant updated successfully." })
+
+
+    elif request.method == 'DELETE':
+
+        result = db.delete_restaurant(id)
+
+        if result:
+            return jsonify({"message": "Restaurant has been deleted."})
+        else:
+            return jsonify({"error": "Restaurant not found."})
 
     else: # GET method
 

@@ -162,3 +162,34 @@ def update_restaurant(restaurant_data, restaurant_id):
     finally:
         if conn:
             conn.close()
+
+
+def delete_restaurant(restaurant_id):
+    conn = None
+
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return None
+        
+        cursor = conn.cursor()
+        query = "DELETE FROM RESTAURANTS WHERE id = %s"
+
+        param = (restaurant_id,)
+        cursor.execute(query, param)
+
+        rows_deleted = cursor.rowcount
+
+        conn.commit()
+
+        if rows_deleted == 1:
+            return True
+        else:
+            return False
+
+    except Exception as e:
+        print(f"An error has occurred when trying to delete the query. {e}")
+
+    finally:
+        if conn:
+            conn.close()
