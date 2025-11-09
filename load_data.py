@@ -46,7 +46,7 @@ try:
     df.to_sql(
         TABLE_NAME, 
         engine, 
-        if_exists='append',
+        if_exists='replace',
         index=False,
         chunksize=500
     )
